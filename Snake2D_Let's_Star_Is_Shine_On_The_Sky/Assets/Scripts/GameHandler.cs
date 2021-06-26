@@ -6,8 +6,14 @@ using CodeMonkey.Utils;
 
 public class GameHandler : MonoBehaviour {
 
+    [SerializeField] private Snake snake;
+    private LevelGrid levelGrid;
     private void Start() {
         Debug.Log("GameHandler.Start");
+
+        levelGrid = new LevelGrid(20,20);
+        snake.SetUpLevelGrid(levelGrid);
+        levelGrid.SetUpSnakeRef(snake);
     }
 
     private void Update() {
