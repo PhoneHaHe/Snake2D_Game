@@ -10,6 +10,8 @@ public class LevelGrid : MonoBehaviour
     private GameObject applefoodGameObjcet;
     private Vector2Int grapefoodGridPosition;
     private GameObject grapefoodGameObjcet;
+    private Vector2Int durianfoodGridPosition;
+    private GameObject durianfoodGameObjcet;
     private Snake snake;
     private int width;
     private int height;
@@ -26,6 +28,7 @@ public class LevelGrid : MonoBehaviour
 
         SpawnAppleFood();
         SpawnGrapeFood();
+        SpawnDurianFood();
     }
 
     private void SpawnAppleFood()
@@ -51,27 +54,52 @@ public class LevelGrid : MonoBehaviour
         grapefoodGameObjcet.transform.position = new Vector3(grapefoodGridPosition.x, grapefoodGridPosition.y);
     }
 
-    public bool TrySnakeEatFood(Vector2Int snakeGridPosition)
+    private void SpawnDurianFood(){
+        do
+        {
+            durianfoodGridPosition = new Vector2Int(Random.Range(1, width - 1), Random.Range(1, height - 1));
+        } while (snake.GetFullSnakeGridPostion().IndexOf(grapefoodGridPosition) != -1);
+
+        durianfoodGameObjcet = new GameObject("DurianFood", typeof(SpriteRenderer));
+        durianfoodGameObjcet.GetComponent<SpriteRenderer>().sprite = GameAssets.gameAsset.durianSprite;
+        durianfoodGameObjcet.transform.position = new Vector3(durianfoodGridPosition.x, durianfoodGridPosition.y);
+    }
+
+    public bool TrySnakeEatAppleFood(Vector2Int snakeGridPosition)
     {
         if (snakeGridPosition == applefoodGridPosition)
         {
             Object.Destroy(applefoodGameObjcet);
 
             SpawnAppleFood();
-            CMDebug.TextPopupMouse("Snake Ate Apple");
 
             return true;
         }
 
+        return false;
+    }
+
+    public bool TrySnakeEatGrapeFood(Vector2Int snakeGridPosition){
         if (snakeGridPosition == grapefoodGridPosition)
         {
             Object.Destroy(grapefoodGameObjcet);
 
             SpawnGrapeFood();
-            CMDebug.TextPopupMouse("Snake Ate Grape");
             return true;
         }
+        
+        return false;
+    }
 
+    public bool TrySnakeEatDurianFood(Vector2Int snakeGridPosition){
+        if (snakeGridPosition == durianfoodGridPosition)
+        {
+            Object.Destroy(durianfoodGameObjcet);
+
+            SpawnDurianFood();
+            return true;
+        }
+        
         return false;
     }
 }

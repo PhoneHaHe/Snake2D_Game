@@ -14,7 +14,7 @@ public class Snake : MonoBehaviour
     private Directions gridMoveDirection;
     private float gridMoveTimer;
     private float gridMoveTimerMax;
-    private int speedRate = 1;
+    public int speedRate = 1;
     private LevelGrid levelGrid;
     private int snakeBodySize;
     private List<SnakeMovePosition> snakeMovePositionList;
@@ -74,7 +74,7 @@ public class Snake : MonoBehaviour
 
     private void HandleGridMovement()
     {
-        gridMoveTimer += Time.deltaTime;
+        gridMoveTimer += Time.deltaTime * speedRate;
         if (gridMoveTimer >= gridMoveTimerMax)
         {
 
@@ -101,9 +101,11 @@ public class Snake : MonoBehaviour
 
             gridPosition += gridMoveDirectionVector;
 
-            bool snakeAteFood = levelGrid.TrySnakeEatFood(gridPosition);
+            bool snakeAteAppleFood = levelGrid.TrySnakeEatAppleFood(gridPosition);
+            bool snakeAteGrapeFood = levelGrid.TrySnakeEatGrapeFood(gridPosition);
+            bool snakeAteDurianFood = levelGrid.TrySnakeEatDurianFood(gridPosition);
 
-            if (snakeAteFood)
+            if (snakeAteAppleFood)
             {
                 //snake body grown;
                 snakeBodySize++;
@@ -111,12 +113,25 @@ public class Snake : MonoBehaviour
                 CreateSnakeBodyPart();
             }
 
+            if(snakeAteGrapeFood)
+            {
+                //Speed Control Incress;
+                speedRate++;
+            }
+
+            if(snakeAteDurianFood){
+                //Spedd Decress
+                if(speedRate > 1){
+                    speedRate--;
+                }
+            }
+
             if (snakeMovePositionList.Count >= snakeBodySize + 1)
             {
                 snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
             }
 
-            transform.position = new Vector3(gridPosition.x * speedRate, gridPosition.y * speedRate);
+            transform.position = new Vector3(gridPosition.x, gridPosition.y);
             transform.eulerAngles = new Vector3(0, 0, GetAngleDirectionFromVector(gridMoveDirectionVector) - 90);
 
             UpdateSnakeBodyPart();

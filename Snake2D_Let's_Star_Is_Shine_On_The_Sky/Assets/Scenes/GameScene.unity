@@ -477,3 +477,4 @@ MonoBehaviour:
   snakeBodySprite: {fileID: 21300000, guid: 699ec0eb3513a9e4d9ec52b08a8544ba, type: 3}
   appleSprite: {fileID: 21300000, guid: c3bd1ffb8de1fa441a845a659442868c, type: 3}
   grapeSprite: {fileID: 21300000, guid: f5930cd1d1fcda341899197fe91a656a, type: 3}
+  durianSprite: {fileID: 21300000, guid: 984012fdc46f73f439f9a93809a095e7, type: 3}
