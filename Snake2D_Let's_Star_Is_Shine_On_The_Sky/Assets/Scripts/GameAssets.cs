@@ -17,5 +17,6 @@ public class GameAssets : MonoBehaviour
     public Sprite appleSprite;
     public Sprite grapeSprite;
     public Sprite durianSprite;
+    public Sprite RockSprite;
 
 }
