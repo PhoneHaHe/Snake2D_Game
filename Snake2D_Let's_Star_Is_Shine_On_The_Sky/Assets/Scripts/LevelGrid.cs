@@ -31,11 +31,32 @@ public class LevelGrid : MonoBehaviour
     public void SetUpSnakeRef(Snake snake)
     {
         this.snake = snake;
+    }
+
+    public void SetUpRockList(Transform _rocklistObject)
+    {
+        Debug.Log($"{_rocklistObject.childCount}");
+
+        for (int i = 0; i < _rocklistObject.childCount; i++)
+        {
+            rock = new Rock();
+            Transform _tempObject;
+            Vector2Int _tempGridposition;
+
+            _tempObject = _rocklistObject.GetChild(i).transform;
+            _tempGridposition = new Vector2Int(Mathf.RoundToInt(_tempObject.position.x), Mathf.RoundToInt(_tempObject.position.y));
+            rock.SetRockGridPosition(_tempGridposition);
+            rockList.Add(rock);
+        }
 
         SpawnAppleFood();
         SpawnGrapeFood();
         SpawnDurianFood();
-        SpawnRock();
+
+        // foreach (Rock item in rockList)
+        // {
+        //     Debug.Log($"{item.GetRockGridPosition()}");
+        // }
     }
 
     private void SpawnAppleFood()
@@ -43,7 +64,8 @@ public class LevelGrid : MonoBehaviour
         do
         {
             applefoodGridPosition = new Vector2Int(Random.Range(1, width - 1), Random.Range(1, height - 1));
-        } while (snake.GetFullSnakeGridPostion().IndexOf(applefoodGridPosition) != -1);
+        } while (snake.GetFullSnakeGridPostion().IndexOf(applefoodGridPosition) != -1 
+        || GetFullRockListGridPostion().IndexOf(applefoodGridPosition) != -1);
 
         applefoodGameObjcet = new GameObject("AppleFood", typeof(SpriteRenderer));
         applefoodGameObjcet.GetComponent<SpriteRenderer>().sprite = GameAssets.gameAsset.appleSprite;
@@ -55,7 +77,8 @@ public class LevelGrid : MonoBehaviour
         do
         {
             grapefoodGridPosition = new Vector2Int(Random.Range(1, width - 1), Random.Range(1, height - 1));
-        } while (snake.GetFullSnakeGridPostion().IndexOf(grapefoodGridPosition) != -1);
+        } while (snake.GetFullSnakeGridPostion().IndexOf(grapefoodGridPosition) != -1 
+        || GetFullRockListGridPostion().IndexOf(grapefoodGridPosition) != -1);
 
         grapefoodGameObjcet = new GameObject("GrapeFood", typeof(SpriteRenderer));
         grapefoodGameObjcet.GetComponent<SpriteRenderer>().sprite = GameAssets.gameAsset.grapeSprite;
@@ -67,7 +90,8 @@ public class LevelGrid : MonoBehaviour
         do
         {
             durianfoodGridPosition = new Vector2Int(Random.Range(1, width - 1), Random.Range(1, height - 1));
-        } while (snake.GetFullSnakeGridPostion().IndexOf(grapefoodGridPosition) != -1);
+        } while (snake.GetFullSnakeGridPostion().IndexOf(grapefoodGridPosition) != -1 
+        || GetFullRockListGridPostion().IndexOf(durianfoodGridPosition) != -1);
 
         durianfoodGameObjcet = new GameObject("DurianFood", typeof(SpriteRenderer));
         durianfoodGameObjcet.GetComponent<SpriteRenderer>().sprite = GameAssets.gameAsset.durianSprite;
@@ -114,33 +138,37 @@ public class LevelGrid : MonoBehaviour
         return false;
     }
 
-    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+    public bool ValidateGridPosition(Vector2Int gridPosition)
     {
 
         if (gridPosition.x < 1)
         {
-            gridPosition.x = width - 1;
+            
+            return true;
         }
 
         if (gridPosition.x > width - 1)
         {
-            gridPosition.x = 1;
+            
+            return true;
         }
 
         if (gridPosition.y < 1)
         {
-            gridPosition.y = height - 1;
+            
+            return true;
         }
 
         if (gridPosition.y > height - 1)
         {
-            gridPosition.y = 1;
+            
+            return true;
         }
-        return gridPosition;
+        return false;
 
     }
 
-    private class Rock
+    public class Rock
     {
         private Vector2Int rockGridPosition;
 
@@ -183,5 +211,17 @@ public class LevelGrid : MonoBehaviour
         }
 
         return false;
+    }
+
+    public List<Vector2Int> GetFullRockListGridPostion()
+    {
+        List<Vector2Int> gridPositionList = new List<Vector2Int>();
+
+        foreach (Rock rockGridPosition in rockList)
+        {
+            gridPositionList.Add(rockGridPosition.GetRockGridPosition());
+        }
+
+        return gridPositionList;
     }
 }

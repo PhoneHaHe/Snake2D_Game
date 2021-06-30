@@ -15,6 +15,8 @@ public class Snake : MonoBehaviour
     {
         Alive, Dead
     }
+
+    public bool isGameStart;
     private State SnakeState;
     private Vector2Int gridPosition;
     private Directions gridMoveDirection;
@@ -38,6 +40,7 @@ public class Snake : MonoBehaviour
         gridMoveTimer = gridMoveTimerMax;
         gridMoveDirection = Directions.Right;
         SnakeState = State.Alive;
+        isGameStart = false;
 
         snakeMovePositionList = new List<SnakeMovePosition>();
         snakeBodySize = 0;
@@ -50,14 +53,17 @@ public class Snake : MonoBehaviour
     private void Update()
     {
 
-        switch (SnakeState)
+        if (isGameStart)
         {
-            case State.Alive:
-                HandleInput();
-                HandleGridMovement();
-                break;
-            case State.Dead:
-                break;
+            switch (SnakeState)
+            {
+                case State.Alive:
+                    HandleInput();
+                    HandleGridMovement();
+                    break;
+                case State.Dead:
+                    break;
+            }
         }
 
     }
@@ -120,7 +126,12 @@ public class Snake : MonoBehaviour
 
             gridPosition += gridMoveDirectionVector;
 
-            gridPosition = levelGrid.ValidateGridPosition(gridPosition);
+            bool snakeOutOfSpace = levelGrid.ValidateGridPosition(gridPosition);
+
+            if (snakeOutOfSpace)
+            {
+                SnakeState = State.Dead;
+            }
 
             bool snakeAteAppleFood = levelGrid.TrySnakeEatAppleFood(gridPosition);
             bool snakeAteGrapeFood = levelGrid.TrySnakeEatGrapeFood(gridPosition);
@@ -151,7 +162,8 @@ public class Snake : MonoBehaviour
 
             bool snakeHitedRock = levelGrid.TrySnakeMoveAround(gridPosition);
 
-            if(snakeHitedRock){
+            if (snakeHitedRock)
+            {
                 SnakeState = State.Dead;
             }
 
@@ -214,6 +226,10 @@ public class Snake : MonoBehaviour
     public int GetSpeedRate()
     {
         return speedRate;
+    }
+
+    public void snakeStart(){
+        this.isGameStart = true;
     }
 
     public List<Vector2Int> GetFullSnakeGridPostion()
