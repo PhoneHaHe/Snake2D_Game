@@ -24,6 +24,7 @@ public class Snake : MonoBehaviour
     private float gridMoveTimerMax;
     public int speedRate = 1;
     private LevelGrid levelGrid;
+    private GameHandler gameHandler;
     private int snakeBodySize;
     private List<SnakeMovePosition> snakeMovePositionList;
     private List<SnakeBodyPart> snakeBodyPartList;
@@ -32,6 +33,11 @@ public class Snake : MonoBehaviour
     public void SetUpLevelGrid(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
+    }
+
+    public void SetUpGameHandler(GameHandler gameHandler)
+    {
+        this.gameHandler = gameHandler;
     }
     private void Awake()
     {
@@ -62,6 +68,7 @@ public class Snake : MonoBehaviour
                     HandleGridMovement();
                     break;
                 case State.Dead:
+                gameHandler.GameOverShow();
                     break;
             }
         }

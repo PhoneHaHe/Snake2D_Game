@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class GameHandler : MonoBehaviour {
 
     [SerializeField] private Transform _gameMode;
     [SerializeField] private Transform _SelectView;
+    [SerializeField] private Transform _GameOverView;
 
     private void Awake() {
         instrance = this;
@@ -20,6 +22,7 @@ public class GameHandler : MonoBehaviour {
         levelGrid = new LevelGrid(20,20);
         snake.SetUpLevelGrid(levelGrid);
         levelGrid.SetUpSnakeRef(snake);
+        snake.SetUpGameHandler(this);
     }
 
 
@@ -32,6 +35,16 @@ public class GameHandler : MonoBehaviour {
             snake.snakeStart();
         }
         
+    }
+
+    public void GameOverShow(){
+
+        _GameOverView.gameObject.SetActive(true);
+        
+    }
+
+    public void PlayAgain(){
+        SceneManager.LoadScene("GameScene");
     }
 
 }
